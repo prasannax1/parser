@@ -39,7 +39,7 @@ Slice Slice::operator() (int start, int stop) const {
 }
 
 char& Slice::operator[] (int i) {
-    if (i < 0 || i >= len()) {
+    if (i < 0 || (unsigned)i >= len()) {
         throw BadIndex {};
     }
 
