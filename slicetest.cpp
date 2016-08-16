@@ -2,7 +2,7 @@
 #include "slice.hpp"
 
 int main() {
-    auto s = Slice{(char *)"hello world"};
+    auto s = Slice{"hello world"};
 
     std::cout << "s = " << std::string(s) << std::endl;
 

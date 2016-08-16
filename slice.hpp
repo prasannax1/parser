@@ -5,23 +5,20 @@
 #include <string>
 class BadSlice {};
 class BadIndex {};
+class SliceIterator;
 
 class Slice {
     public:
-        Slice(char *buf) {
-            _begin = buf;
-            _index = _begin;
-            auto len = strlen(buf);
-            _end = _begin + len;
+        Slice(std::string s) {
+            auto l = s.length();
+            _begin = new char [l + 1];
+            _allocated = true;
+            _end = _begin + l;
         }
 
-        Slice(char *begin, char *end) {
-            if (_end < _begin) {
-                throw BadSlice {};
-            }
-        
-            _begin = begin;
-            _end = end;
+        ~Slice() {
+            if (_allocated) delete[] _begin;
+            _allocated = false;
         }
 
         Slice operator() (int start, int stop) const {
@@ -33,7 +30,7 @@ class Slice {
                 start += len();
             }
         
-            if (stop < start) {
+            if (stop < 0 || start < 0 || stop < start || (unsigned)stop > len()) {
                 throw BadSlice {};
             }
         
@@ -52,30 +49,8 @@ class Slice {
             return _begin[i];
         }
 
-        bool operator!= (const Slice& other) const {
-            return _begin != other._begin
-                || _end != other._end
-                || (_index != _begin && _index != _end);
-        }
-
-        char operator* () const {
-            return *_index;
-        }
-
-        const Slice& operator++ () {
-            ++_index;
-            return *this;
-        }
-
-        Slice begin() {
-            _index = _begin;
-            return *this;
-        }
-
-        Slice end() {
-            return *this;
-        }
-
+        SliceIterator begin();
+        SliceIterator end();
         operator std::string() {
             return std::string(_begin, len());
         }
@@ -83,20 +58,52 @@ class Slice {
     private:
         char *_begin;
         char *_end;
-        char *_index;
+        bool _allocated;
+
+        Slice(char *begin, char *end) {
+            if (_end < _begin) {
+                throw BadSlice {};
+            }
+        
+            _begin = begin;
+            _end = end;
+            _allocated = false;
+        }
 };
 
+class SliceIterator {
+    public:
+        bool operator!=(const SliceIterator& other) const {
+            return _index != other._index && _index <= _max;
+        }
+
+        char operator* () const {
+            return _buf[_index];
+        }
+
+        const SliceIterator& operator++ () {
+            ++_index;
+            return *this;
+        }
+
+        SliceIterator(const Slice& s, char *p) {
+            _max = s.len();
+            _index = 0;
+            _buf = p;
+        }
+
+    private:
+        size_t _index;
+        char* _buf;
+        size_t _max;
+};
+
+SliceIterator Slice::begin() {
+    return SliceIterator(*this, _begin);
+}
+
+SliceIterator Slice::end() {
+    return SliceIterator(*this, _end);
+}
+
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
