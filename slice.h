@@ -1,6 +1,7 @@
 #ifndef __SLICE_H
 #define __SLICE_H
 #include <cstddef>
+#include <string>
 
 class Slice {
     public:
@@ -14,6 +15,7 @@ class Slice {
         const Slice& operator++ ();
         Slice begin();
         Slice end();
+        operator std::string();
 
     private:
         char *_begin;

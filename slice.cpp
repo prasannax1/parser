@@ -1,6 +1,7 @@
 #include "slice.h"
 #include <cstring>
 #include <cstddef>
+#include <string>
 
 Slice::Slice(char *buf) {
     _begin = buf;
@@ -68,5 +69,9 @@ Slice Slice::begin() {
 
 Slice Slice::end() {
     return *this;
+}
+
+Slice::operator std::string() {
+    return std::string(_begin, len());
 }
 
