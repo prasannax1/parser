@@ -1,8 +1,10 @@
 #ifndef __SLICE_HPP
 #define __SLICE_HPP
 #include <cstddef>
+#include <cstring>
 #include <string>
-#include <string>
+class BadSlice {};
+class BadIndex {};
 
 class Slice {
     public:
@@ -84,8 +86,6 @@ class Slice {
         char *_index;
 };
 
-class BadSlice {};
-class BadIndex {};
 #endif
 
 
