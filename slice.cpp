@@ -49,7 +49,7 @@ char& Slice::operator[] (int i) {
 bool Slice::operator!= (const Slice& other) const {
     return _begin != other._begin
         || _end != other._end
-        || _index != _end;
+        || (_index != _begin && _index != _end);
 }
 
 char Slice::operator* () const {
