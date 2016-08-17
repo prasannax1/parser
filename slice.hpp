@@ -12,6 +12,7 @@ class Slice {
         Slice(std::string s) {
             auto l = s.length();
             _begin = new char [l + 1];
+            strcpy(_begin, s.c_str());
             _allocated = true;
             _end = _begin + l;
         }

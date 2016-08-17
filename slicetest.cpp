@@ -4,10 +4,14 @@
 int main() {
     auto s = Slice{"hello world"};
 
-    std::cout << "s = " << std::string(s) << std::endl;
+    //test indexing
+    for (auto i: {0, 1, 2, 3, 4, 5, 6}) {
+        std::cout << s[i] << std::endl;
+    } 
 
-    for (auto x: s) {
-        std::cout << x << std::endl;
+    //test iteration
+    for (auto c: s) {
+        std::cout << c << std::endl;
     }
 }
 
